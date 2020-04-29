@@ -16,7 +16,7 @@ class Board:
 
         global screen, grid
         pygame.init()
-        screen = pygame.display.set_mode((self.height, self.width))
+        screen = pygame.display.set_mode((self.width, self.height))
         screen.fill(self.black)
         Thread(target=gui, args=(self, ), daemon=True).start()  # get a thread to manage the Tkinter
 
