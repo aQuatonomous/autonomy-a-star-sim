@@ -92,38 +92,51 @@ class TraversableTile(Tile, ABC):
         touching_walkways = []
         current_x, current_y = self.get_coords()
 
-        
-        if Tile.is_valid_path(board, current_x, current_y, -1, -1):
-            searched_tile = board.grid[current_x - 1][current_y - 1]
-            touching_walkways.append(searched_tile)
+        # Straight neighbours
 
         if Tile.is_valid_path(board, current_x, current_y, -1, 0):
-            searched_tile = board.grid[current_x - 1][current_y]
-            touching_walkways.append(searched_tile)
-
-        if Tile.is_valid_path(board, current_x, current_y, -1, 1):
-            searched_tile = board.grid[current_x - 1][current_y + 1]
-            touching_walkways.append(searched_tile)
+            top_tile = board.grid[current_x - 1][current_y]
+            touching_walkways.append(top_tile)
 
         if Tile.is_valid_path(board, current_x, current_y, 0, -1):
-            searched_tile = board.grid[current_x][current_y - 1]
-            touching_walkways.append(searched_tile)
+            left_tile = board.grid[current_x][current_y - 1]
+            touching_walkways.append(left_tile)
 
         if Tile.is_valid_path(board, current_x, current_y, 0, 1):
-            searched_tile = board.grid[current_x][current_y + 1]
-            touching_walkways.append(searched_tile)
-
-        if Tile.is_valid_path(board, current_x, current_y, 1, -1):
-            searched_tile = board.grid[current_x + 1][current_y - 1]
-            touching_walkways.append(searched_tile)
+            right_tile = board.grid[current_x][current_y + 1]
+            touching_walkways.append(right_tile)
 
         if Tile.is_valid_path(board, current_x, current_y, 1, 0):
-            searched_tile = board.grid[current_x + 1][current_y]
-            touching_walkways.append(searched_tile)
+            bottom_tile = board.grid[current_x + 1][current_y]
+            touching_walkways.append(bottom_tile)
+
+        # Diagonals
+        
+        if Tile.is_valid_path(board, current_x, current_y, -1, -1):
+            if top_tile is not None and left_tile is not None and \
+                    not isinstance(top_tile, Obstacle) and not isinstance(left_tile, Obstacle):  # make sure that the path cant teleport diagonally through a wall
+                topl_tile = board.grid[current_x - 1][current_y - 1]
+                touching_walkways.append(topl_tile)
+
+        if Tile.is_valid_path(board, current_x, current_y, -1, 1):
+            if top_tile is not None and right_tile is not None and \
+                    not isinstance(top_tile, Obstacle) and not isinstance(right_tile, Obstacle):
+                topr_tile = board.grid[current_x - 1][current_y + 1]
+                touching_walkways.append(topr_tile)
+
+        if Tile.is_valid_path(board, current_x, current_y, 1, -1):
+            if bottom_tile is not None and left_tile is not None and \
+                    not isinstance(bottom_tile, Obstacle) and not isinstance(left_tile, Obstacle):
+                bottoml_tile = board.grid[current_x + 1][current_y - 1]
+                touching_walkways.append(bottoml_tile)
 
         if Tile.is_valid_path(board, current_x, current_y, 1, 1):
-            searched_tile = board.grid[current_x + 1][current_y + 1]
-            touching_walkways.append(searched_tile)
+            if bottom_tile is not None and right_tile is not None and \
+                    not isinstance(bottom_tile, Obstacle) and not isinstance(right_tile, Obstacle):
+                bottomr_tile = board.grid[current_x + 1][current_y + 1]
+                touching_walkways.append(bottomr_tile)
+
+
 
         return touching_walkways
 

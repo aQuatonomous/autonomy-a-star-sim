@@ -11,7 +11,7 @@ def start_pressed(board, is_visual):
 
 
 def pop_up_message(message):
-    messagebox.showinfo("Error", message)
+    messagebox.showerror("Error", message)
 
 
 def reset_pressed(board):
@@ -25,6 +25,7 @@ def gui(board):
     root.title("A* Pathfinding Example")
 
     is_visual = IntVar()
+    is_visual.set(1)
 
     start_button = Button(root,
                           text="START",
