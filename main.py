@@ -1,6 +1,7 @@
 from gui_menu import *
 from tile import *
 from threading import Thread
+from time import sleep
 
 
 class Board:
@@ -38,7 +39,7 @@ class Board:
 
         return drawable_grid
 
-    def find_path(self):
+    def find_path(self, show_visual):
         self.convert_from_drawable_grid()
         self.generating_path = True
         current_tile = self.target_points[0]  # set the current tile to the first tile
@@ -52,7 +53,8 @@ class Board:
 
             for tile in open_list:
                 if not isinstance(tile, TargetPosition):
-                    tile.change_colour(WalkableTile.open_list_colour)
+                    if show_visual:
+                        tile.change_colour(WalkableTile.open_list_colour)
                 if tile.f < smallest_f:
                     smallest_f = tile.f
                     current_tile = tile
@@ -68,7 +70,7 @@ class Board:
 
             open_list.remove(current_tile)
             closed_list.append(current_tile)
-            if not isinstance(current_tile, TargetPosition):
+            if not isinstance(current_tile, TargetPosition) and show_visual:
                 current_tile.change_colour(WalkableTile.closed_list_colour)
 
             adjacent_tiles = current_tile.get_touching_walkways(self)  # get the 8 surrounding tiles
@@ -93,6 +95,8 @@ class Board:
                         tile.g = current_path_g
                         tile.h = current_path_h
                         tile.f = current_path_f
+            if show_visual:
+                    sleep(0.01)
 
     def convert_from_drawable_grid(self,):
         self.drawing_mode = False
