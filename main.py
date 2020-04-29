@@ -70,7 +70,7 @@ class Board:
                 if not isinstance(tile, TraversableTile) or tile in closed_list:  # if the tile is not in the closed list and is not an obstacle
                     continue  # if it is then skip the tile
 
-                current_path_g = tile.distance_to(self.target_points[0])
+                current_path_g = current_tile.g + tile.distance_to(current_tile)
                 current_path_h = tile.distance_to(self.target_points[1])
                 current_path_f = current_path_g + current_path_h
 
@@ -82,6 +82,7 @@ class Board:
                     tile.f = current_path_f
                 else:
                     if current_path_g < tile.g:
+                        tile.parent = current_tile
                         tile.g = current_path_g
                         tile.h = current_path_h
                         tile.f = current_path_f

@@ -80,6 +80,8 @@ class TraversableTile(Tile, ABC):
     def __init__(self, left, top, width, height):
         super(TraversableTile, self).__init__(left, top, width, height)
         self.change_colour(self.default_colour)
+        self.g = 0
+        self.g = 0
 
     def distance_to(self, tile):
         this_x, this_y = Tile.convert_tile_to_grid(self)
