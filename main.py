@@ -1,8 +1,8 @@
-from gui_menu import *
+import gui_menu
+import sys
 from tile import *
 from threading import Thread
 from time import sleep
-
 
 class Board:
     size = width, height = 600, 600
@@ -19,7 +19,7 @@ class Board:
         pygame.init()
         screen = pygame.display.set_mode((self.width, self.height))
         screen.fill(self.black)
-        Thread(target=gui, args=(self, ), daemon=True).start()  # get a thread to manage the Tkinter
+        Thread(target=gui_menu.gui, args=(self, ), daemon=True).start()  # get a thread to manage the Tkinter
 
     def reset(self):
         self.grid = self.generate_drawable_grid()
@@ -67,6 +67,11 @@ class Board:
                     parent = parent.parent
                 self.generating_path = False
                 break  # end the search loop
+
+            if len(open_list) == 0:
+                gui_menu.pop_up_message("There is no possible path")
+                break
+
 
             open_list.remove(current_tile)
             closed_list.append(current_tile)

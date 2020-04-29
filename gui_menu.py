@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from threading import Thread
 
 
@@ -6,14 +7,19 @@ def start_pressed(board, is_visual):
     if len(board.target_points) >= 2:
         Thread(target=board.find_path, args=(is_visual.get(), ), daemon=True).start()  #  start the path finding procedure
     else:
-        print("Not enough target points")
+        pop_up_message("You need to specify a start and end point by using your middle mouse button")
+
+
+def pop_up_message(message):
+    messagebox.showinfo("Error", message)
+
 
 def reset_pressed(board):
     board.reset()
 
 
 def gui(board):
-    global start_button
+    global start_button, message_box
     root = Tk()
     root.geometry("300x100")
     root.title("A* Pathfinding Example")
