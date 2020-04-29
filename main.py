@@ -1,4 +1,3 @@
-import pygame
 from gui_menu import *
 from tile import *
 from threading import Thread
@@ -13,12 +12,19 @@ class Board:
     def __init__(self):
         self.grid = self.generate_drawable_grid()
         self.drawing_mode = True
+        self.generating_path = False
 
         global screen, grid
         pygame.init()
         screen = pygame.display.set_mode((self.width, self.height))
         screen.fill(self.black)
         Thread(target=gui, args=(self, ), daemon=True).start()  # get a thread to manage the Tkinter
+
+    def reset(self):
+        self.grid = self.generate_drawable_grid()
+        self.drawing_mode = True
+        self.generating_path = False
+        self.target_points = []
 
     def generate_drawable_grid(self):
 
@@ -34,19 +40,19 @@ class Board:
 
     def find_path(self):
         self.convert_from_drawable_grid()
-
+        self.generating_path = True
         current_tile = self.target_points[0]  # set the current tile to the first tile
         current_tile.f = 0
         open_list = [current_tile]
         closed_list = []
 
-        while True:
+        while self.generating_path:
             smallest_f = float("inf")
             current_tile = None
 
             for tile in open_list:
                 if not isinstance(tile, TargetPosition):
-                    tile.change_colour(WalkableTile.current_search_colour)
+                    tile.change_colour(WalkableTile.open_list_colour)
                 if tile.f < smallest_f:
                     smallest_f = tile.f
                     current_tile = tile
@@ -57,12 +63,13 @@ class Board:
                     if not isinstance(parent, TargetPosition):
                         parent.change_colour(TraversableTile.path_colour)
                     parent = parent.parent
+                self.generating_path = False
                 break  # end the search loop
 
             open_list.remove(current_tile)
             closed_list.append(current_tile)
             if not isinstance(current_tile, TargetPosition):
-                current_tile.change_colour(WalkableTile.searched_colour)
+                current_tile.change_colour(WalkableTile.closed_list_colour)
 
             adjacent_tiles = current_tile.get_touching_walkways(self)  # get the 8 surrounding tiles
 

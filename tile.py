@@ -20,19 +20,15 @@ class Tile(pygame.Rect, ABC):  # Abstract tile class
         self.colour = colour
 
     def get_coords(self):
-        return self.convert_tile_to_grid(self)
+        x = self.left // self.block_size
+        y = self.top // self.block_size
+
+        return x, y
 
     @staticmethod
     def get_mouse_grid_coord():
         x = pygame.mouse.get_pos()[0] // Tile.block_size
         y = pygame.mouse.get_pos()[1] // Tile.block_size
-        return x, y
-
-    @staticmethod
-    def convert_tile_to_grid(tile):
-        x = tile.left // Tile.block_size
-        y = tile.top // tile.block_size
-
         return x, y
 
     @staticmethod
@@ -75,7 +71,7 @@ class Obstacle(Tile):
 
 
 class TraversableTile(Tile, ABC):
-    path_colour = (173, 216, 230)
+    path_colour = (255, 255, 0)
 
     def __init__(self, left, top, width, height):
         super(TraversableTile, self).__init__(left, top, width, height)
@@ -84,8 +80,8 @@ class TraversableTile(Tile, ABC):
         self.g = 0
 
     def distance_to(self, tile):
-        this_x, this_y = Tile.convert_tile_to_grid(self)
-        other_x, other_y = Tile.convert_tile_to_grid(tile)
+        this_x, this_y = self.get_coords()
+        other_x, other_y = tile.get_coords()
 
         x_diff = abs(this_x - other_x) * 10
         y_diff = abs(this_y - other_y) * 10
@@ -96,6 +92,7 @@ class TraversableTile(Tile, ABC):
         touching_walkways = []
         current_x, current_y = self.get_coords()
 
+        
         if Tile.is_valid_path(board, current_x, current_y, -1, -1):
             searched_tile = board.grid[current_x - 1][current_y - 1]
             touching_walkways.append(searched_tile)
@@ -134,8 +131,8 @@ class TraversableTile(Tile, ABC):
 class WalkableTile(TraversableTile):
 
     default_colour = Tile.white
-    searched_colour = (0, 0, 255)
-    current_search_colour = (0, 255, 0)
+    open_list_colour = (255, 0, 0)
+    closed_list_colour = (255, 100, 0)
 
     def __init__(self, tile):
         super(WalkableTile, self).__init__(tile.left, tile.top, tile.width, tile.height)
