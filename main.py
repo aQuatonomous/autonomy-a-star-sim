@@ -133,7 +133,7 @@ def main():
                 pygame.quit()
                 sys.exit()
             if board.drawing_mode:
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
+                if event.type == pygame.MOUSEBUTTONDOWN and ((event.button == 2) or (event.button == 1 and pygame.key.get_pressed()[pygame.K_LCTRL])):
                     x, y = Tile.get_mouse_grid_coord()  # convert the mouse position to the grid x and y coords
                     cell = board.grid[x][y]  # get the cell at the current point
                     if not isinstance(cell, TargetPosition):
@@ -145,7 +145,7 @@ def main():
                         board.grid[x][y] = DrawableTile(cell.left, cell.top, cell.width, cell.height)
 
         if board.drawing_mode:
-            if pygame.mouse.get_pressed()[0] == 1 and pygame.mouse.get_pressed()[2] == 0:  # if lmb is clicked
+            if pygame.mouse.get_pressed()[0] == 1 and pygame.mouse.get_pressed()[2] == 0 and not pygame.key.get_pressed()[pygame.K_LCTRL]:  # if lmb is clicked
                 x, y = Tile.get_mouse_grid_coord()
                 if not isinstance(board.grid[x][y], TargetPosition):
                     board.grid[x][y].set_obstacle(True)  # set the tile as an obstacle
