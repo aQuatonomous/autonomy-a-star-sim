@@ -153,9 +153,12 @@ class WalkableTile(TraversableTile):
 
 
 class TargetPosition(TraversableTile):
-
     default_colour = (255, 255, 0)
 
     def __init__(self, left, top, width, height):
         super(TargetPosition, self).__init__(left, top, width, height)
         self.change_colour(self.default_colour)
+        self.g = 0   # Add these lines
+        self.h = 0   # Add these lines
+        self.f = 0   # Add these lines
+
